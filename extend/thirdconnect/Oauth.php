@@ -11,7 +11,7 @@ use thirdconnect\base\GatewayBase;
 
 class Oauth
 {
-    protected static function init($gateway, $config = [], $code)
+    protected static function init($gateway, $config = [])
     {
         $gateway = preg_replace_callback('/_([a-zA-Z])/', function ($match) {
             return strtoupper($match[1]);
@@ -26,7 +26,7 @@ class Oauth
                 }
                 $config = $config[$gateway];
             }
-            $app = new $class($config, $code);
+            $app = new $class($config);
             if ($app instanceof GatewayBase) {
                 return $app;
             }
@@ -38,7 +38,6 @@ class Oauth
     public static function __callStatic($gateway, $arguments)
     {
         $config = empty($arguments) ? [] : $arguments[0];
-        $code = empty($arguments) ? [] : $arguments[1];
-        return self::init($gateway, $config, $code);
+        return self::init($gateway, $config);
     }
 }

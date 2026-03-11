@@ -9,7 +9,7 @@ class DictItemController extends BaseController
     public function list()
     {
         $dictTypeId = $this->request->param('type_id');
-        $list = DictItem::where('type_id', $dictTypeId)->select();
+        $list = DictItem::where('type_id', $dictTypeId)->order('id asc')->select();
         $this->success(200, $list);
     }
 

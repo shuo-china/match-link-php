@@ -12,7 +12,7 @@ class DictTypeController extends BaseController
 
         if (!$data) {
             $dictTypeKeys = DictType::where('status', 1)->column('key', 'id');
-            $dictItems = DictItem::where('status', 1)->select()->toArray();
+            $dictItems = DictItem::where('status', 1)->order('id asc')->select()->toArray();
             $data = [];
             foreach ($dictItems as $item) {
                 $key = $dictTypeKeys[$item['type_id']];

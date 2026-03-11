@@ -23,10 +23,7 @@ return [
     ],
 
     // 微信小程序登录配置
-    'WechatMini' => [
-        'APPID' => config('sys.wechat_mini.appid'),
-        'APPSECRET' => config('sys.wechat_mini.appsecret')
-    ],
+    'WechatMini' => [],
 
     // 支付宝登录配置 
     'Alipay' => [
