@@ -10,6 +10,10 @@ class MemberController extends BaseController
         $map = [];
         $param = $this->request->param();
 
+        if (!empty($param['gender'])) {
+            $map[] = ['gender', '=', $param['gender']];
+        }
+
         if (!empty($param['name'])) {
             $map[] = ['name', 'like', "%{$param['name']}%"];
         }

@@ -8,7 +8,7 @@ class Member extends BaseModel
 {
     use SoftDelete;
 
-    protected $appendFields = [
+    public $appendFields = [
         'albums',
         'age',
         'cover',
@@ -18,6 +18,7 @@ class Member extends BaseModel
         'familys_text',
         'industry_text',
         'education_text',
+        'childrens_text',
         'marital_status_text',
     ];
 
@@ -26,21 +27,17 @@ class Member extends BaseModel
         'currentAddress' => 'array',
         'permanentAddress' => 'array',
         'familys' => 'array',
+        'childrens' => 'json'
+    ];
+
+    protected $hidden = [
+        'mobile'
     ];
 
     public function findDetailByUid($uid)
     {
         return $this
             ->where('uid', $uid)
-            ->append($this->appendFields)
-            ->find();
-    }
-
-    public function findRandomDetail($exceptUids = [])
-    {
-        return $this
-            // ->whereNotIn('uid', $exceptUids)
-            ->orderRaw('RAND()')
             ->append($this->appendFields)
             ->find();
     }
@@ -72,7 +69,12 @@ class Member extends BaseModel
     public function getAlbumPathsAttr()
     {
         $albumPaths = array_column($this->albums, 'path');
-        return array_slice($albumPaths, 1);
+        if (count($albumPaths) <= 1) {
+            return $albumPaths;
+        }
+        $first = array_shift($albumPaths);
+        $albumPaths[] = $first;
+        return $albumPaths;
     }
 
     public function getAgeAttr()
@@ -89,7 +91,65 @@ class Member extends BaseModel
 
     public function getIndustryTextAttr()
     {
-        return config('dict.industry')[$this->getAttr('industry')];
+        $industryText = $this->getAttr('industry') ? config('dict.industry')[$this->getAttr('industry')] : '';
+        $occupationText = $this->getAttr('occupation');
+        $res = [];
+        if (!empty($industryText)) {
+            $res[] = $industryText;
+        }
+        if (!empty($occupationText)) {
+            $res[] = $occupationText;
+        }
+        return implode('-', $res);
+    }
+
+    public function getChildrensTextAttr()
+    {
+        $childrens = $this->getAttr('childrens');
+        if (empty($childrens)) {
+            return '';
+        }
+        $stats = [
+            '1_1' => 0,
+            '1_2' => 0,
+            '2_1' => 0,
+            '2_2' => 0,
+        ];
+        $childrensText = [];
+        foreach ($childrens as $v) {
+            $gender = (int) ($v['gender'] ?? 0);
+            $custody = (int) ($v['custody'] ?? 0);
+            $key = $gender . '_' . $custody;
+            if (isset($stats[$key])) {
+                $stats[$key]++;
+            }
+        }
+        $selfBoys = $stats['1_1'];
+        $selfGirls = $stats['2_1'];
+        $otherBoys = $stats['1_2'];
+        $otherGirls = $stats['2_2'];
+
+        if ($selfBoys > 0 || $selfGirls > 0) {
+            $selfParts = [];
+            if ($selfBoys > 0) {
+                $selfParts[] = $selfBoys . '个男孩';
+            }
+            if ($selfGirls > 0) {
+                $selfParts[] = $selfGirls . '个女孩';
+            }
+            $childrensText[] = implode(',', $selfParts) . '跟自己';
+        }
+        if ($otherBoys > 0 || $otherGirls > 0) {
+            $otherParts = [];
+            if ($otherBoys > 0) {
+                $otherParts[] = $otherBoys . '个男孩';
+            }
+            if ($otherGirls > 0) {
+                $otherParts[] = $otherGirls . '个女孩';
+            }
+            $childrensText[] = implode('', $otherParts) . '跟对方';
+        }
+        return implode('，', $childrensText);
     }
 
     public function getEducationTextAttr()
