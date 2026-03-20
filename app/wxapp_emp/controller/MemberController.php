@@ -5,6 +5,19 @@ use app\wxapp_emp\model\Member;
 
 class MemberController extends BaseController
 {
+    public function options()
+    {
+        $mbrs = Member::field('id,name,mobile')->select();
+        $result = [];
+        foreach ($mbrs as $mbr) {
+            $result[] = [
+                'label' => $mbr['name'] . ' - ' . $mbr['mobile'],
+                'value' => $mbr['id'],
+            ];
+        }
+        $this->success(200, $result);
+    }
+
     public function pagination()
     {
         $map = [];
