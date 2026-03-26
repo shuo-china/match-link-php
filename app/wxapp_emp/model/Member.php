@@ -55,6 +55,20 @@ class Member extends BaseModel
         return $this->getAttr('industry') ? config('dict.industry')[$this->getAttr('industry')] : '';
     }
 
+    public function getJobTextAttr()
+    {
+        $industryText = $this->getAttr('industry') ? config('dict.industry')[$this->getAttr('industry')] : '';
+        $occupationText = $this->getAttr('occupation');
+        $res = [];
+        if (!empty($industryText)) {
+            $res[] = $industryText;
+        }
+        if (!empty($occupationText)) {
+            $res[] = $occupationText;
+        }
+        return implode('-', $res);
+    }
+
     public function getEducationTextAttr()
     {
         return config('dict.education')[$this->getAttr('education')];

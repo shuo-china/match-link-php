@@ -5,9 +5,26 @@ use app\wxapp_emp\model\Member;
 
 class MemberController extends BaseController
 {
+    protected $middleware = [
+        'wxapp_employee_api_auth:guest' => ['except' => ['roughDetail']],
+    ];
+
+    public function roughDetail($id)
+    {
+        $mbr = Member::where('id', $id)->append(['age', 'albums', 'job_text', 'education_text', 'marital_status_text'])->field('birthYear,albumKeys,industry,occupation,education,maritalStatus,height')->find();
+        $this->success(200, $mbr);
+    }
+
     public function options()
     {
-        $mbrs = Member::field('id,name,mobile')->select();
+        $param = $this->request->param();
+        $map = [];
+
+        if (!empty($param['gender'])) {
+            $map[] = ['gender', '=', $param['gender']];
+        }
+
+        $mbrs = Member::field('id,name,mobile')->where($map)->select();
         $result = [];
         foreach ($mbrs as $mbr) {
             $result[] = [
@@ -63,7 +80,8 @@ class MemberController extends BaseController
             $map[] = ['education', 'in', $param['education']];
         }
 
-        $mbrs = Member::where($map)->append(['age', 'cover', 'industry_text', 'education_text', 'marital_status_text'])->paginate();
+        $mbrs = Member::where($map)->append(['age', 'cover', 'industry_text', 'education_text', 'marital_status_text'])
+            ->order('id', 'desc')->paginate();
 
         $this->success(200, $mbrs);
     }
@@ -96,7 +114,7 @@ class MemberController extends BaseController
 
     public function detail($id)
     {
-        $mbr = Member::with(['employee'])->where('id', $id)->append(['age', 'albums'])->find();
+        $mbr = Member::with(['employee'])->where('id', $id)->append(['age', 'albums', 'gender_text', 'industry_text', 'education_text', 'marital_status_text'])->find();
         $this->success(200, $mbr);
     }
 

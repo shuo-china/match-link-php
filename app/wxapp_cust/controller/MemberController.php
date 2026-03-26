@@ -2,21 +2,24 @@
 
 namespace app\wxapp_cust\controller;
 
+use app\wxapp_cust\model\Favorite;
 use app\wxapp_cust\model\Member;
 
 class MemberController extends BaseController
 {
-    public function detail($uid)
+    public function detail($id)
     {
         $mbrModel = new Member();
-        $mbr = $mbrModel->findDetailByUid($uid);
+        $mbr = $mbrModel->findDetailById($id);
+        $isFavorite = Favorite::where('user_id', '=', $this->request->userId)
+            ->where('member_id', '=', $id)
+            ->find();
+        $mbr['is_favorite'] = $isFavorite ? true : false;
         $this->success(200, $mbr);
     }
 
     public function pagination()
     {
-        $exceptUids = $this->request->post('exceptUids', []);
-
         $map = [
             ['albumKeys', '<>', '[]'],
         ];
@@ -57,15 +60,11 @@ class MemberController extends BaseController
 
         $mbr = new Member;
         $query = $mbr->where($map)->append($mbr->appendFields);
+        $randSeed = (string) $this->request->param('randSeed', date('Ymd'));
+        $randSeed = addslashes($randSeed);
+        $randOrderExpr = "CRC32(CONCAT(id, '-', '{$randSeed}'))";
 
-        if (!empty($exceptUids)) {
-            $exceptUidSql = implode(',', array_map(function ($uid) {
-                return "'" . addslashes((string) $uid) . "'";
-            }, $exceptUids));
-            $query->orderRaw("CASE WHEN uid IN ({$exceptUidSql}) THEN 1 ELSE 0 END ASC, RAND()");
-        } else {
-            $query->orderRaw('RAND()');
-        }
+        $query->orderRaw("{$randOrderExpr} ASC, id ASC");
 
         $mbrs = $query->paginate();
         $this->success(200, $mbrs);

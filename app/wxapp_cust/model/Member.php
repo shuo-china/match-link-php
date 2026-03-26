@@ -16,7 +16,7 @@ class Member extends BaseModel
         'albumPaths',
         'gender_text',
         'familys_text',
-        'industry_text',
+        'job_text',
         'education_text',
         'childrens_text',
         'marital_status_text',
@@ -34,10 +34,10 @@ class Member extends BaseModel
         'mobile'
     ];
 
-    public function findDetailByUid($uid)
+    public function findDetailById($id)
     {
         return $this
-            ->where('uid', $uid)
+            ->where('id', $id)
             ->append($this->appendFields)
             ->find();
     }
@@ -89,7 +89,7 @@ class Member extends BaseModel
         return config('dict.gender')[$this->getAttr('gender')];
     }
 
-    public function getIndustryTextAttr()
+    public function getJobTextAttr()
     {
         $industryText = $this->getAttr('industry') ? config('dict.industry')[$this->getAttr('industry')] : '';
         $occupationText = $this->getAttr('occupation');
