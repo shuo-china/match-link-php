@@ -61,6 +61,54 @@ class EmployeeController extends BaseController
         $this->success(201);
     }
 
+    public function pagination()
+    {
+        $mbrs = Employee::order('id', 'desc')->paginate();
+
+        $this->success(200, $mbrs);
+    }
+
+    public function create()
+    {
+        $post = $this->request->post();
+
+        if (!$this->request->employeeInfo['is_super']) {
+            $this->error(400, '非超级管理员不能创建员工账号');
+        }
+
+        $has = Employee::where('mobile', $post['mobile'])->find();
+        if ($has) {
+            $this->error(400, '该手机号已注册过');
+        }
+
+        $model = new Employee();
+        $model->save($post);
+
+        $this->success(201);
+    }
+
+    public function update()
+    {
+        $post = $this->request->post();
+
+        Employee::update($post);
+        $this->success(201);
+    }
+
+    public function detail($id)
+    {
+        $mbr = Employee::where('id', $id)->find();
+        $this->success(200, $mbr);
+    }
+
+    public function delete()
+    {
+        $id = $this->request->param('id');
+        $mbr = Employee::find($id);
+        $mbr->delete();
+        $this->success(204);
+    }
+
     /**
      * 获取手机号码
      */

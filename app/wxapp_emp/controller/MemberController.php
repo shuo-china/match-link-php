@@ -11,7 +11,9 @@ class MemberController extends BaseController
 
     public function roughDetail($id)
     {
-        $mbr = Member::where('id', $id)->append(['age', 'albums', 'job_text', 'education_text', 'marital_status_text'])->field('birthYear,albumKeys,industry,occupation,education,maritalStatus,height')->find();
+        $mbr = Member::where('id', $id)
+            ->append(['age', 'albums', 'job_text', 'education_text', 'marital_status_text', 'familys_text', 'childrens_text'])
+            ->field('name,gender,birthYear,albumKeys,industry,occupation,education,annualIncome,hasHouse,hasVehicle,permanentAddress,maritalStatus,height,childrens,familys')->find();
         $this->success(200, $mbr);
     }
 
