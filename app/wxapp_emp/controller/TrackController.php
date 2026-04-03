@@ -61,8 +61,7 @@ class TrackController extends BaseController
     public function delete()
     {
         $id = $this->request->param('id');
-        $track = Track::find($id);
-        $track->delete();
+        Track::destroy($id);
         $this->success(204);
     }
 }

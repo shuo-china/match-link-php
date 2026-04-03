@@ -126,8 +126,7 @@ class MemberController extends BaseController
     public function delete()
     {
         $id = $this->request->param('id');
-        $mbr = Member::find($id);
-        $mbr->delete();
+        Member::destroy($id);
         $this->success(204);
     }
 }

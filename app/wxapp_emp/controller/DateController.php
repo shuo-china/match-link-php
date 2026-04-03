@@ -76,8 +76,7 @@ class DateController extends BaseController
     public function delete()
     {
         $id = $this->request->param('id');
-        $track = Date::find($id);
-        $track->delete();
+        Date::destroy($id);
         $this->success(204);
     }
 }

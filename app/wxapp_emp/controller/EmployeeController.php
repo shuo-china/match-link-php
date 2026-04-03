@@ -104,8 +104,7 @@ class EmployeeController extends BaseController
     public function delete()
     {
         $id = $this->request->param('id');
-        $mbr = Employee::find($id);
-        $mbr->delete();
+        Employee::destroy($id);
         $this->success(204);
     }
 
