@@ -46,7 +46,7 @@ class EmployeeController extends BaseController
 
     public function currentEmployee()
     {
-        $employee = Employee::where('id', $this->request->clientId)->find();
+        $employee = Employee::where('id', $this->request->clientId)->append(['avatar'])->find();
 
         $this->success(200, $employee);
     }
@@ -63,7 +63,7 @@ class EmployeeController extends BaseController
 
     public function pagination()
     {
-        $mbrs = Employee::order('id', 'desc')->paginate();
+        $mbrs = Employee::order('id', 'desc')->append(['avatar'])->paginate();
 
         $this->success(200, $mbrs);
     }
@@ -97,7 +97,7 @@ class EmployeeController extends BaseController
 
     public function detail($id)
     {
-        $mbr = Employee::where('id', $id)->find();
+        $mbr = Employee::where('id', $id)->append(['avatar'])->find();
         $this->success(200, $mbr);
     }
 
