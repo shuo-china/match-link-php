@@ -128,6 +128,11 @@ class Member extends BaseModel
         return config('dict.marital_status')[$this->getAttr('maritalStatus')];
     }
 
+    public function getVipLevelTextAttr()
+    {
+        return config('dict.vip_level')[$this->getAttr('vipLevel')];
+    }
+
     public function getFamilysTextAttr()
     {
         $familys = $this->getAttr('familys');
