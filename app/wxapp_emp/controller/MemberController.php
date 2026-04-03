@@ -26,12 +26,14 @@ class MemberController extends BaseController
             $map[] = ['gender', '=', $param['gender']];
         }
 
-        $mbrs = Member::field('id,name,mobile')->where($map)->select();
+        $mbrs = Member::field('id,name,mobile,albumKeys')->append(['cover'])->where($map)->select();
         $result = [];
         foreach ($mbrs as $mbr) {
             $result[] = [
-                'label' => $mbr['name'] . ' - ' . $mbr['mobile'],
-                'value' => $mbr['id'],
+                'id' => $mbr['id'],
+                'name' => $mbr['name'],
+                'mobile' => $mbr['mobile'],
+                'cover' => empty($mbr['cover']) ? null : $mbr['cover']['path'],
             ];
         }
         $this->success(200, $result);
