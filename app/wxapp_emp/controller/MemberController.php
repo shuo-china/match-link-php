@@ -118,7 +118,8 @@ class MemberController extends BaseController
 
     public function detail($id)
     {
-        $mbr = Member::with(['employee'])->where('id', $id)->append(['age', 'albums', 'gender_text', 'industry_text', 'education_text', 'marital_status_text'])->find();
+        $mbr = Member::with(['employee'])->where('id', $id)
+            ->append(['age', 'albums', 'gender_text', 'industry_text', 'vip_level_text', 'education_text', 'marital_status_text'])->find();
         $this->success(200, $mbr);
     }
 
