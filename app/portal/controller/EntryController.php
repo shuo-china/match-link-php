@@ -8,6 +8,10 @@ class EntryController extends BaseController
 {
     public function index()
     {
-        $this->success(200, 'hello world');
+        $list = \think\facade\Db::name('member_copy')->select();
+
+        foreach ($list as $item) {
+            Member::where('uid', $item['uid'])->update(['weight' => $item['weight']]);
+        }
     }
 }
