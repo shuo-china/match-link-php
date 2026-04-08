@@ -45,7 +45,27 @@ class MemberController extends BaseController
         $param = $this->request->param();
 
         if (!empty($param['gender'])) {
-            $map[] = ['gender', '=', $param['gender']];
+            $map[] = ['gender', 'in', $param['gender']];
+        }
+
+        if (isset($param['hasHouse']) && $param['hasHouse'] !== '') {
+            $map[] = ['hasHouse', 'in', $param['hasHouse']];
+        }
+
+        if (isset($param['hasVehicle']) && $param['hasVehicle'] !== '') {
+            $map[] = ['hasVehicle', 'in', $param['hasVehicle']];
+        }
+
+        if (isset($param['hasChildren']) && $param['hasChildren'] !== '') {
+            $map[] = ['hasChildren', 'in', $param['hasChildren']];
+        }
+
+        if (!empty($param['industry'])) {
+            $map[] = ['industry', 'in', $param['industry']];
+        }
+
+        if (!empty($param['vipLevel'])) {
+            $map[] = ['vipLevel', 'in', $param['vipLevel']];
         }
 
         if (!empty($param['name'])) {

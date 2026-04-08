@@ -11,6 +11,10 @@ class TrackController extends BaseController
         $map = [];
         $param = $this->request->param();
 
+        if (!empty($param['member_id'])) {
+            $map[] = ['member_id', '=', $param['member_id']];
+        }
+
         if (!empty($param['intention'])) {
             $map[] = ['intention', 'in', $param['intention']];
         }

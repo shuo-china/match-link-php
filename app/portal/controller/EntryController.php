@@ -8,10 +8,10 @@ class EntryController extends BaseController
 {
     public function index()
     {
-        $list = \think\facade\Db::name('member_copy')->select();
+        // $list = \think\facade\Db::name('member_copy')->select();
 
-        foreach ($list as $item) {
-            Member::where('uid', $item['uid'])->update(['weight' => $item['weight']]);
-        }
+        // foreach ($list as $item) {
+        //     Member::where('uid', $item['uid'])->update(['weight' => $item['weight']]);
+        // }
     }
 }
