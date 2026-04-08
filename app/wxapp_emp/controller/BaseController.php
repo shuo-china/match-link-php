@@ -9,7 +9,7 @@ class BaseController extends CommonBaseController
 {
     use WxappSend;
 
-    protected $middleware = ['wxapp_employee_api_auth:guest'];
+    protected $middleware = ['wxapp_employee_api_auth:bound'];
 
     protected function initialize()
     {

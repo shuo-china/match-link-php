@@ -6,7 +6,11 @@ use app\wxapp_emp\model\Member;
 class MemberController extends BaseController
 {
     protected $middleware = [
-        'wxapp_employee_api_auth:guest' => ['except' => ['roughDetail']],
+        'wxapp_employee_api_auth:bound' => [
+            'except' => [
+                'roughDetail'
+            ],
+        ]
     ];
 
     public function roughDetail($id)
